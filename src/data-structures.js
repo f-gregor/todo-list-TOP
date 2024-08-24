@@ -1,24 +1,10 @@
 class Todo {
-    constructor(title, description, dueDate, priority) {
+    constructor(title, description, dueDate, priority, project) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.project = undefined;
-    }
-
-    assignProject(targetProject) {
-        this.project = targetProject;
-        this.project.addTodo(this);
-    }
-
-    changeProject(newProject) {
-        this.project.removeTodo(this);
-        this.assignProject(newProject);
-    }
-
-    delete() {
-        this.project.removeTodo(this);
+        this.project = project;
     }
 }
 
@@ -26,16 +12,6 @@ class Project {
     constructor(name, color) {
         this.name = name;
         this.color = color;
-        this.todos = [];
-    }
-
-    addTodo(todo){
-        this.todos.push(todo);
-    }
-
-    removeTodo(targetTodo) {
-        const index = this.todos.indexOf(targetTodo);
-        if (index > -1) this.todos.splice(index, 1);
     }
 }
 
