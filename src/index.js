@@ -1,17 +1,32 @@
 import "./style.css";
 import {Project, Todo} from "./data-structures";
 
-const TODOS = [];
+function loadData() {
+    let todos, projects;
+
+    if (localStorage.getItem("TODOS") && localStorage.getItem("PROJECTS")) {
+        todos = JSON.parse(localStorage.getItem("TODOS"));
+        projects = JSON.parse(localStorage.getItem("PROJECTS"));
+    }
+    else {
+        todos = [];
+        projects = [];
+        projects.push(new Project("Default", "#666666"));
+    }
+
+    return [todos, projects];
+}
+
+function saveData() {
+    localStorage.setItem("TODOS", JSON.stringify(TODOS));
+    localStorage.setItem("PROJECTS", JSON.stringify(PROJECTS));
+}
 
 function delete_todo(todo) {
     const index = TODOS.indexOf(todo);
     if (index > -1) TODOS.splice(index, 1);
+    saveData()
 }
-
-const PROJECTS = [];
-
-PROJECTS.push(new Project("Default", "#666666"));
-
 // Display functions 
 
 function generateProjectOptions(projectList) {
@@ -107,11 +122,7 @@ function displayTodos(list) {
     }
 }
 
-generateProjectOptions(PROJECTS);
-generateProjectList(PROJECTS);
-
 // Todo creation handling
-
 const showTodoDialog = document.querySelector("button.todo");
 const todoDialog = document.querySelector("#todo");
 const todoForm = document.querySelector("#todo>form");
@@ -134,6 +145,7 @@ todoForm.addEventListener('submit', (e) => {
                         PROJECTS[Number(formData.get('projects'))]));
 
     displayTodos(TODOS);
+    saveData();
 })
 
 // Project creation handing
@@ -158,4 +170,11 @@ projectForm.addEventListener('submit', (e) => {
 
     generateProjectOptions(PROJECTS);
     generateProjectList(PROJECTS);
+    saveData();
 });
+
+// Program running
+const [TODOS, PROJECTS] = loadData();
+generateProjectOptions(PROJECTS);
+generateProjectList(PROJECTS);
+displayTodos(TODOS);
